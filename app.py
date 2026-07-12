@@ -17,6 +17,7 @@ st.set_page_config(
 
 @st.cache_resource
 def load_model():
+    """Load the trained machine-learning pipeline once and reuse it."""
     if not MODEL_PATH.exists():
         return None
 
@@ -120,6 +121,7 @@ with right_column:
         min_value=1,
         max_value=120,
         value=30,
+        help="Patient age in years.",
     )
 
 
@@ -184,4 +186,44 @@ if predict_button:
             input_data,
             use_container_width=True,
             hide_index=True,
+        )
+
+    st.divider()
+    st.subheader("Model feature importance")
+
+    model_step = model.named_steps["model"]
+
+    if hasattr(model_step, "feature_importances_"):
+        feature_names = input_data.columns
+        importance_values = model_step.feature_importances_
+
+        importance_df = pd.DataFrame(
+            {
+                "Feature": feature_names,
+                "Importance": importance_values,
+            }
+        ).sort_values(
+            by="Importance",
+            ascending=False,
+        )
+
+        st.bar_chart(
+            importance_df.set_index("Feature")
+        )
+
+        most_important_feature = importance_df.iloc[0]["Feature"]
+
+        st.info(
+            f"The model's most influential feature is "
+            f"**{most_important_feature}**."
+        )
+
+        st.caption(
+            "Feature importance shows which inputs were most useful to the model. "
+            "It does not prove that a feature caused diabetes."
+        )
+
+    else:
+        st.info(
+            "Feature importance is not available for the selected model."
         )
