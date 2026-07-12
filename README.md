@@ -23,21 +23,23 @@ This project walks through a complete, minimal ML workflow:
 
 ## Project structure
 
-```
-.
+diabetes-risk-predictor/
+├── app.py
 ├── data/
-│   └── diabetes.csv        # dataset (not included, see below)
+│   └── README.md
+├── models/
+│   └── diabetes_model.joblib
 ├── src/
-│   ├── train.py             # training entry point
-│   ├── preprocess.py        # data cleaning / feature prep
-│   └── evaluate.py          # metrics and reporting
-├── models/                  # saved model artifacts (created after training)
-├── app.py                   # Streamlit app
+│   ├── __init__.py
+│   ├── data.py
+│   ├── explore.py
+│   └── train.py
+├── tests/
+│   └── test_preprocess.py
+├── .gitignore
 ├── requirements.txt
 └── README.md
-```
 
-*(Adjust this tree to match your actual repo layout.)*
 
 ## Dataset
 
@@ -92,8 +94,14 @@ predicted risk score.
 
 ## Results
 
-*(Fill in after training — e.g. accuracy, precision/recall, ROC-AUC, and a
-short note on which model performed best.)*
+## Model Results
+
+| Model | ROC-AUC | Precision | Recall | F1-score | Accuracy |
+|---|---:|---:|---:|---:|---:|
+| Logistic Regression | 0.813 | 0.60 | 0.70 | 0.65 | 0.73 |
+| Random Forest | 0.829 | 0.62 | 0.69 | 0.65 | 0.74 |
+
+The Random Forest achieved the highest ROC-AUC score and was saved for use by the Streamlit application.
 
 | Metric | Score |
 |---|---|
@@ -109,6 +117,13 @@ short note on which model performed best.)*
 - Not validated for clinical use.
 - Missing/zero values in some fields (e.g. `Insulin`, `SkinThickness`) are
   imputed, which introduces some uncertainty.
+  ## Limitations
+
+- The model was trained using a relatively small public dataset.
+- Results may not generalise to other populations or clinical settings.
+- Feature importance reflects model behaviour and does not prove causation.
+- The application is an educational demonstration, not a diagnostic tool.
+- Predictions should never replace assessment by a qualified healthcare professional.
 
 ## License
 
